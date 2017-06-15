@@ -1,0 +1,6 @@
+Unknown service has:
+       ['127.0.0.1:443', '127.0.0.1:11211']
+mysql service has:
+       ['127.0.0.1:3306']
+smb service has:
+       ['127.0.0.1:445']

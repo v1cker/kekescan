@@ -1,0 +1,10 @@
+www.qq.com                    	117.135.169.41
+blog.qq.com                   	117.135.169.41
+search.qq.com                 	111.13.94.40, 111.13.94.41
+sites.qq.com                  	10.137.129.173
+my.qq.com                     	183.232.91.110
+cs.qq.com                     	1.1.1.1
+home.qq.com                   	183.232.98.144
+bbs.blog.qq.com               	1.1.1.1
+www.blog.qq.com               	117.185.30.198, 117.185.30.201
+test.sites.qq.com             	10.137.129.173

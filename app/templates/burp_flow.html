@@ -1,0 +1,73 @@
+{% load xfilter %}
+<!DOCTYPE html>
+<html class=" ">
+<head><meta http-equiv="refresh" content="5">  </head>
+<body class="">
+{% include 'header.html' %}  {% include 'left.html' %}
+<main>
+    {% include 'banner.html' %}
+    <div class="container-fluid">
+            <h1 class="bread-crumb">
+          <strong>
+            <a href="/burpflow">BURP HTTP FLOW</a> / <a href="/burpflow/distinct/">DISTINCT</a> / <a href="
+            #">VURN</a>
+          </strong>
+        </h1>
+      
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>host</th>
+                <th>method</th>
+                <th>path</th>
+                <th>title</th>
+                <th>status</th>
+                <th>time</th>
+            </tr>
+            </thead>
+            <tbody id="resulist">
+            {% for i_http in burp_flow %}
+                
+                <tr>
+                    <td width="50"> <a href='?id={{ i_http.id }}'>{{ i_http.id }}</td>
+                    <td width="250">   {{ i_http.host }}  </td>
+                    <td width="70">{{ i_http.isPost | httpmethod }}</td>
+                    <td width="450"> <a href='{{ i_http.host }}{{ i_http.path  }}'>  {{ i_http.path  }} </td>
+                    <td width="50"> --</td>
+                    <td width="50"> --</td>
+                    <td width="50"> -- </td>
+                </tr>
+               
+            {% endfor %}
+            </tbody>
+   <tfoot>
+ 
+            
+            <tr>
+                <td colspan="6">
+                    <ul id="pagination-ddol" class="pagination-sm pull-right"></ul>
+                    
+                    <p class="tfoot-info">共 <span class="text-success">{{ num }}</span> 条记录
+                        <span class="step-links">
+                        {% if burp_flow.has_previous %}
+                        <a href="?page={{ burp_flow.previous_page_number }}">previous</a>
+                        {% endif %}
+
+                        <!-- Showing the page numbers in Html Page -->
+                        <span class="current">
+                        Page {{ burp_flow.number }} of {{ burp_flow.paginator.num_pages }}.
+                        </span>
+
+                        {% if burp_flow.has_next %}
+                        <a href="?page={{ burp_flow.next_page_number }}">next</a>
+                        {% endif %}</p> 
+                        </span>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</main>
+</body>
+</html>

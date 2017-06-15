@@ -1,0 +1,6 @@
+www.lvsedianli.com            	121.199.57.30
+mail.lvsedianli.com           	123.58.177.51
+games.lvsedianli.com          	202.102.110.203
+m.lvsedianli.com              	121.199.57.30
+provincia.lvsedianli.com      	202.102.110.203
+login.lvsedianli.com          	220.181.7.171, 220.181.7.172, 106.120.159.149

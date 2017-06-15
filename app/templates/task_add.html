@@ -1,0 +1,94 @@
+ <!DOCTYPE html>
+<html class=" ">
+  
+{% include 'header.html' %}
+  
+  <body class="">
+
+    {% include 'left.html' %}
+
+    <main>
+      {% include 'banner.html' %}
+      <div class="container-fluid">
+        <h1 class="bread-crumb">
+          <strong>
+            <a href="/task/add">TASKADD</a> / <a href="/task/queue">主任务队列</a> / <a href="/subtask/queue">子任务队列</a>
+          </strong>
+        </h1>
+        
+            <div >     
+                <ul class="nav nav-tabs">
+
+                   <li class="{% if request.path ==  '/task/add' %} active {% endif %}"><a href="{% url 'task_add' %}">单模块模式</a></li>
+                    <li class="{% if request.path ==  '/atk/add' %} active {% endif %}"><a href="{% url 'atk_add' %}">ATK模式</a></li>
+
+                </ul> 
+            </div>
+        {% if request.path ==  '/atk/add' %}
+        <form class="form-horizontal" action="/atk/add" method="POST" data-action="notpjax">
+        {% elif  request.path ==  '/task/add' %}
+        <form class="form-horizontal" action="/task/add" method="POST" data-action="notpjax"> 
+        {% endif %}
+        
+            {% csrf_token %}
+          <div class="form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+              目标地址
+            </label>
+            <div class="col-xs-8">
+		     {{ form.target }}
+            </div>
+          </div>
+          <div class="form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+              任务名称
+            </label>
+            <div class="col-xs-8 form-inline">
+              <!--<input id="task_name" name="task_name" class="form-control" placeholder="主站扫描" type="text">-->
+              {{ form.task_name }}
+              <span class="form-control-static">
+                标识任务，可选
+              </span>
+            </div>
+          </div>
+          
+          {% if request.path ==  '/task/add' %}   
+          <div class="form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+              扫描类型
+            </label>
+            <div class="col-xs-8 form-inline">
+              {{ form.attack_type }}
+            </div>
+          </div>
+          {% elif request.path ==  '/atk/add' %}   
+           <div class="form-group form-group-sm">
+            <label class="col-xs-2 control-label">
+              攻击线路
+            </label>
+            <div class="col-xs-8 form-inline">
+              {{ form.attack_route }}
+            </div>
+          </div>
+          {% endif %}
+          <div class="form-group form-group-sm">
+            <div class="col-xs-offset-2 col-xs-8">
+			  <input type="submit" value="启动扫描" class="btn btn-default" />
+              <!-- <button type="button" onclick="add_task()" name="submit" value="add_task" class="btn btn-sm">
+                启动扫描
+              </button>-->
+            </div>
+          </div>
+        </form>
+        
+        
+
+      </div>
+    </main>
+
+  </body>
+</html>
+ 
+ 
+ 
+  

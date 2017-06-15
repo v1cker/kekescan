@@ -1,0 +1,146 @@
+{% load xfilter %}
+<!DOCTYPE html>
+<html class=" ">
+<head> </head>
+<body class="">
+{% include 'header.html' %}  {% include 'left.html' %}
+<main>
+    {% include 'banner.html' %}
+    <div class="container-fluid">
+        <h1 class="bread-crumb"> <strong>扫描结果</strong>
+            <div class="absolute-right">
+                <form action="" method="post"  class="form-inline"" data-format="HTML" data-action="notpjax">
+                    {% csrf_token %}
+                    {{ form.results_type }}  
+                      {{ form.target }}
+                     <button class="btn btn-default" type="submit"><i class="icons-xs icons-xs-search"></i>Search</button>  
+                </form>
+            </div> </h1>
+        <table class="table table-hover">
+
+            {% if results and results_type == 'icp_check' %}
+            <thead>
+            <tr>
+                <th>域名</th>
+                <th>公司名称</th>
+                <th>备案号</th>
+                <th>抓取时间</th>
+            </tr>
+            </thead>
+            <tbody id="resulist">
+                {% for obj in results %}
+                <tr>
+                    <td>{{obj.domain_name}}</td>
+                    <td>{{ obj.company_name}}</td>
+                    <td>{{ obj.beianhao}}</td>
+                    <td>{{ obj.insert_time|date:"Y-m-d H:i:s" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+            {% elif results and results_type == 'subdomain' %}
+            <thead>
+            <tr>
+                <th>主域名</th>
+                <th>子域名</th>
+                <th>子域名IP</th>
+                <th>抓取时间</th>
+            </tr>
+            </thead>
+            <tbody id="resulist">
+                {% for obj in results %}
+                <tr>
+                    <td>{{obj.domain_name}}</td>
+                    <td>{{ obj.sub_domain}}</td>
+                    <td>{{ obj.sub_ip}}</td>
+                    <td>{{ obj.fuzz_time|date:"Y-m-d H:i:s" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+       
+            
+            {% elif results and results_type == 'fnascan' %}
+           <thead>
+            <tr>
+                <th>IP:PORT</th>
+              
+                <th>Service Name</th>
+                <th>Service Detail</th>
+            </tr>
+            </thead>
+            <tbody id="resulist">
+                {% for obj in results %}
+                <tr>
+                    <td>{{obj.ip}}:{{ obj.port}}</td>
+                     
+                    <td>{{ obj.service_name}}</td>
+                    <td><pre>{{ obj.service_detail | getheader }}</pre></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+ 
+     
+            {% elif results and results_type == 'nmap' %}
+           <thead>
+            <tr>
+                <th>IP:PORT</th>
+              
+                <th>Service Name</th>
+                <th>protocol</th>
+            
+                <th>product_version</th>
+                <th>State</th>
+                 
+            </tr>
+            </thead>
+            <tbody id="resulist">
+                {% for obj in results %}
+                <tr>
+                    <td>{{obj.address}}:{{ obj.port}}</td>
+                     
+                    <td>{{ obj.service}}</td>
+                    <td>{{ obj.protocol}}</td>
+                    <td>{{ obj.product}}{{ obj.product_version}}</td>
+                   
+
+                    <td><pre>{{ obj.state }}</pre></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% endif %}  
+
+            <tfoot>
+ 
+            
+            <tr>
+                <td colspan="6">
+                    <ul id="pagination-ddol" class="pagination-sm pull-right"></ul>
+                    
+                    <p class="tfoot-info">共 <span class="text-success">{{ num }}</span> 条记录
+                        <span class="step-links">
+                        {% if results.has_previous %}
+                        <a href="?page={{ results.previous_page_number }}">previous</a>
+                        {% endif %}
+
+                        <!-- Showing the page numbers in Html Page -->
+                        <span class="current">
+                        Page {{ results.number }} of {{ results.paginator.num_pages }}.
+                        </span>
+
+                        {% if results.has_next %}
+                        <a href="?page={{ results.next_page_number }}">next</a>
+                        {% endif %}</p> 
+                        </span>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</main>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/jquery.twbsPagination.js" type="text/javascript"></script>
+<script src="/static/js/jquery.twbsPagination.min.js" type="text/javascript"></script>
+ 
+ 
+</body>
+</html>

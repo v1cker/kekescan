@@ -1,0 +1,164 @@
+{% load xfilter %}
+<!DOCTYPE html>
+<html class=" ">
+<head> 
+<script src="/static/js/jquery.min.js"></script>
+<script>
+setInterval(function() {
+    $.getJSON("/showjob/", function(json){
+      console.log(json);
+      if(typeof json.flower == "undefined"){
+        $("#resulist tr:eq(0) td:nth-child(2)").html("stop"); 
+      }
+      else{
+        $("#resulist tr:eq(0) td:nth-child(2)").html("running"); 
+      }
+
+      if(typeof json.localworker == "undefined"){
+        $("#resulist tr:eq(1) td:nth-child(2)").html("stop"); 
+      }
+      else{
+        $("#resulist tr:eq(1) td:nth-child(2)").html("running"); 
+      }
+
+    });
+    
+}, 1000);
+
+function start_stop(myservice)
+{
+if (myservice === "startflower")
+  {
+     $.get("/startjob/?job_name=flower",function(data,status){
+        $("#resulist tr:eq(0) td:nth-child(2)").html("running");   }
+      );
+  }
+if (myservice === "stopflower")
+  {
+     $.get("/rmjob/?job_name=flower",function(data,status){
+        $("#resulist tr:eq(0) td:nth-child(2)").html("stop"); }
+      );
+  }
+
+
+if (myservice === "startlocalworker")
+  {
+     $.get("/startjob/?job_name=localworker",function(data,status){
+        $("#resulist tr:eq(0) td:nth-child(2)").html("running");   }
+      );
+  }
+if (myservice === "stoplocalworker")
+  {
+     $.get("/rmjob/?job_name=localworker",function(data,status){
+        $("#resulist tr:eq(0) td:nth-child(2)").html("stop"); }
+      );
+  }
+
+}
+
+
+
+</script>
+
+</head>
+<body class="">
+{% include 'header.html' %}  {% include 'left.html' %}
+<main>
+    {% include 'banner.html' %}
+    <div class="container-fluid">
+        <h1 class="bread-crumb"> <strong>系统设置</strong>
+         <p>
+        <table class="table table-hover">
+
+           
+            <thead>
+            <tr>
+                <th>程序</th>
+                <th>状态</th>
+                 <th>操作</th>
+              
+            </tr>
+            </thead>
+            <tbody id="resulist">
+             
+                <tr>    
+                <td>flower</td>
+                <td>stop</td>
+                <td>
+                    <div class="btn-group btn-group-xs">
+                      <button type="button" onclick="start_stop(this.name)"  name="startflower" class="btn btn-default">启动</button>
+                      <button type="button" onclick="start_stop(this.name)"  name="stopflower"  class="btn btn-default">停止</button>
+                    </div>
+                 </td>
+                     
+                </tr>
+
+                <tr>    
+                <td>local worker </td>
+                <td>running</td>
+                <td>
+                    <div class="btn-group btn-group-xs">
+                      <button type="button" onclick="start_stop(this.name)"  name="startlocalworker" class="btn btn-default">启动</button>
+                      <button type="button" onclick="start_stop(this.name)"  name="stoplocalworker"  class="btn btn-default">停止</button>
+                    </div>
+                 </td>
+                     
+                </tr>
+
+                <tr>    
+                <td>DNSLog</td>
+                <td>stop</td>
+                <td>
+                    <div class="btn-group btn-group-xs">
+                      <button type="button"  onclick="start_stop(this.name)"  name="x"  class="btn btn-default">启动</button>
+                      <button type="button"  onclick="start_stop(this.name)"  name="x"  class="btn btn-default">停止</button>
+                    </div>
+                 </td>
+                     
+                </tr>            </tbody>
+            
+          
+            <tfoot>
+            <tr>
+                <td colspan="6">
+                COMMENT:
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                启动worker命令：
+            xmanage celery worker --loglevel=info ( kill $(ps aux | grep 'celery' | awk '{print $2}') )
+                </td>
+            </tr>
+             
+            <tr>
+                <td colspan="6">
+                启动flower命令：
+            flower  --broker=redis://:ruijiangmei@115.28.72.96:6379/1 
+
+            
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                Chrome代理地址：
+           http://127.0.0.1:8000/chromeapi
+                </td>
+            </tr>
+            
+            <tr>
+                <td colspan="6">
+                Chrome 插件接口地址：http://127.0.0.1:8000/chromeapi
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</main>
+
+<script src="/static/js/jquery.twbsPagination.js" type="text/javascript"></script>
+<script src="/static/js/jquery.twbsPagination.min.js" type="text/javascript"></script>
+ 
+ 
+</body>
+</html>

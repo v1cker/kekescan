@@ -1,0 +1,7 @@
+blog.baidu.com                	111.206.37.138
+www.baidu.com                 	111.13.100.92, 111.13.100.91
+home.baidu.com                	202.108.23.231
+search.baidu.com              	111.13.101.58
+my.baidu.com                  	61.135.162.37
+cs.baidu.com                  	10.91.160.210
+beta.cs.baidu.com             	10.91.160.230

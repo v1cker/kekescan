@@ -1,0 +1,84 @@
+ <!DOCTYPE html>
+<html class=" ">
+  
+{% include 'header.html' %}
+  
+  <body class="">
+
+    {% include 'left.html' %}
+
+    <main>
+      {% include 'banner.html' %}
+      <div class="container-fluid">
+        <h1 class="bread-crumb">
+          <strong>
+            手工添加 / 
+            {% if request.path == '/results/add/subdomainbrute' %} 添加子域名 {% endif %}
+            {% if request.path == '/results/add/icp' %} 添加备案域名 {% endif %}
+          </strong>
+        </h1>
+        
+            <div >     
+                <ul class="nav nav-tabs">
+
+                   <li class="{% if request.path == '/results/add/subdomainbrute' %} active {% endif %}"><a href="/results/add/subdomainbrute">SubDomainBrute</a></li>
+                    <li class="{% if request.path ==  '/results/add/icp' %} active {% endif %}"><a href="/results/add/icp">ICP</a></li>
+
+                </ul> 
+            </div>
+	   
+        {% if request.path ==  "/results/add/subdomainbrute" %}  
+        <form class="form-horizontal" action="{{ action_url }}" method="POST" data-action="notpjax">
+            {% csrf_token %}
+          <div class="form-group form-group-sm">
+        
+            <div class="col-xs-8">
+		     {{ form.domain_data }}
+            </div>
+          </div>
+          <div class="form-group form-group-sm">
+ 
+            <div class="col-xs-8 form-inline">
+              {{ form.domain_name }}
+            </div>
+          </div>
+          <div class="form-group form-group-sm">
+            <div class="col-xs-offset-2 col-xs-8">
+			  <input type="submit" value="添加" class="btn btn-default" />
+            </div>
+          </div>
+        </form>
+		
+        {% elif request.path ==  "/results/add/icp" %}
+        <form class="form-horizontal" action="{{ action_url }}" method="POST" data-action="notpjax">
+            {% csrf_token %}
+          <div class="form-group form-group-sm">
+        
+            <div class="col-xs-8">
+		     {{ form.icp_data }}
+            </div>
+          </div>
+          <div class="form-group form-group-sm">
+ 
+            <div class="col-xs-8 form-inline">
+                {{ form.icp_code }}
+            </div>
+          </div>
+          <div class="form-group form-group-sm">
+            <div class="col-xs-offset-2 col-xs-8">
+			  <input type="submit" value="添加" class="btn btn-default" />
+            </div>
+          </div>
+        </form>
+		{% endif %}
+        
+
+      </div>
+    </main>
+
+  </body>
+</html>
+ 
+ 
+ 
+  

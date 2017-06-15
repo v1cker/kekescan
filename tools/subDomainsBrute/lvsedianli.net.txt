@@ -1,0 +1,4 @@
+www.lvsedianli.net            	121.199.73.164
+cn.lvsedianli.net             	121.199.73.164
+acp.lvsedianli.net            	202.102.110.203
+www2b.lvsedianli.net          	202.102.110.203

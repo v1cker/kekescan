@@ -1,0 +1,87 @@
+{% load xfilter %}
+<!DOCTYPE html>
+<html class=" ">
+  
+{% include 'header.html' %}
+  
+  <body class="">
+
+    {% include 'left.html' %}
+
+    <main>
+      {% include 'banner.html' %}
+      <div class="container-fluid">
+        <h1 class="bread-crumb">
+          <strong>
+            漏洞检测 / 任务历史
+          </strong>
+        </h1>
+ 
+<div >     
+    <ul class="nav nav-tabs">
+
+       <li class="{% if request.path ==  '/task/history' %} active {% endif %}"><a href="{% url 'task_history' %}">ALL</a></li>
+        <li class="{% if request.path ==  '/task/history/category' %} active {% endif %}"><a href="{% url 'task_history_category' %}">Category</a></li>
+
+    </ul> 
+</div>
+<div><h4></h4></div> 
+{% if request.path ==  '/task/history/category' %}
+ <div class="list-group">
+ <ul class="list-group">
+    <li  class="list-group-item"><a href="{% url 'subdomainbrute' %}">SubDomainBrute</a></li>
+    <li  class="list-group-item"><a href="{% url 'portscan' %}">PortScan</a></li>
+    <li  class="list-group-item"><a href="{% url 'sitedesc' %}">SiteDesc</a></li>
+    <li  class="list-group-item"><a href="{% url 'portscan' %}">WeakFile</a></li>
+    <li  class="list-group-item"><a href="{% url 'portscan' %}">Middleware</a></li>
+    <li  class="list-group-item"><a href="{% url 'sitedesc' %}">WeakPass</a></li>
+ </ul>
+ </div>
+{% else %}
+  
+<div class="row">
+
+{% if task_objs %}
+<table class="table">
+	<thead>
+		<tr>
+			<th width="50">id</th>
+			<th width="250">target</th>
+            <th width="150">attack type</th>
+			<th width="80">status</th>
+			<th width="180">start time</th>
+            <th width="180">end time</th>
+			<th>except message</th>
+            <th width="140">operate</th>
+     
+		</tr>
+	</thead>
+	<tbody>
+	{% for obj in task_objs %}
+	<tr>
+ 
+		<td>{{obj.id}}</td>
+		<td>{{ obj.attack_target}}</td>
+        <td>{{ obj.attack_type}}</td>
+        <td>{{ obj.status }}</td>
+		<td>{{ obj.start_time|date:"Y-m-d H:i:s" }}</td>
+		<td>{{ obj.end_time|date:"Y-m-d H:i:s" }}</td>
+		<td>{{ obj.except_message }}</td>
+		<td>
+            <a href="/task/operate?type=restart&task_id={{ obj.id }}"  ><span class="glyphicon glyphicon-repeat" aria-hidden="true" title="重新启动" alt="重新启动" /></span></a>&nbsp;&nbsp;
+            <a href="/task/operate?type=delete&task_id={{ obj.id }}"  ><span class="glyphicon glyphicon-remove-circle" aria-hidden="true" title="删除" alt="删除" /> 
+
+		</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+{% endif %}
+</div>
+ 
+{% endif %} 
+ 
+  </main>
+
+  </body></html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<title>扫描结果</title>
+<!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<style type="text/css">
+.port {
+	cursor: pointer;
+}
+#infoModal .modal-body,#response {
+    max-height: 600px;
+}
+</style>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-8">
+				<div class="panel panel-default">
+					<div class="panel-heading">服务统计</div>
+					<div class="panel-body">
+						<canvas id="statChart" class="col-lg-12"></canvas>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">扫描结果统计</div>
+					<div class="panel-body">
+						<div class="alert alert-success" role="alert">
+							<span class="glyphicon glyphicon-th-list"></span>
+							探测到服务器数：
+							<span id="total-server" class="badge"></span>
+						</div>
+						<div class="alert alert-info" role="alert">
+							<span class="glyphicon glyphicon-flash"></span>
+							开放端口总数：
+							<span id="total-port" class="badge"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">开放端口</div>
+					<div class="panel-body">
+						<table id="ports-table" class="table table-hover">
+							<thead>
+								<tr>
+									<th>IP</th>
+									<th>端口</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="infoModal" tabindex="-1">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span>
+					</button>
+					<h4 class="modal-title">详细信息</h4>
+				</div>
+				<div class="modal-body">
+					<pre id="response"></pre>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+	<script type="text/javascript" src="result.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			var ctx = document.getElementById("statChart").getContext("2d");
+
+			var data = {};
+
+			data.labels = Object.keys(statistics);
+			data.datasets = [ {
+				label : "数量",
+				fillColor : "rgba(101,154,201,1)",
+				data : Object.keys(statistics).map(function(k) {
+					return statistics[k];
+				})
+			} ];
+			new Chart(ctx).Bar(data);
+			var totalServer = 0, totalPort = 0;
+			$.each(servers, function(ip, ports) {
+				totalServer++;
+				totalPort += ports.length;
+				var opened = ports.map(function(p) {
+					return '<span data-toggle="tooltip" title="'+p+'" class="label label-success port">' + p.split(' ')[0] + '</span>'
+				}).join(' ');
+
+				$('#ports-table tbody').append('<tr><td>' + ip + '</td><td>' + opened + '</td></tr>');
+			});
+			$('#total-server').html(totalServer);
+			$('#total-port').html(totalPort);
+			$('[data-toggle="tooltip"]').tooltip();
+
+			$('.port').click(function() {
+				var key = $(this).parent().prev().html()+":"+$(this).html();
+				if(portdata.hasOwnProperty(key)){
+					$('#response').html(decodeURIComponent(portdata[key]));
+					$('#infoModal').modal('show');
+				}
+			});
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+
+def subdomainbrute(request):
+    """Renders the about page."""
+    assert isinstance(request, HttpRequest)
+    if request.method == 'GET':
+        form = SubDomainBruteForms()
+    else:
+        form = SubDomainBruteForms(request.POST)
+    if not form.is_valid():
+        #print 1000*'A'
+        return render(
+            request,
+            'app/subdomainbrute.html',
+            context_instance = RequestContext(request,
+            {
+                'title':'subdomainbrute',
+                'message':'Your application description page.',
+                'year':datetime.now().year,
+                'form': form ,
+
+            })
+        )
+    domain_name = form.cleaned_data.get('domain_name', [])    
+    print ">>>>",domain_name
+    domain_brute_task = SubDomainBruteTask( domain_name = domain_name,)
+    domain_brute_task.save()
+    transaction.commit()
+    return render(
+            request,
+            'app/subdomainbrute.html',
+            context_instance = RequestContext(request,
+            {
+                'title':'subdomainbrute',
+                'message':'Your application description page.',
+                'year':datetime.now().year,
+                'form': form ,
+
+            })
+        )
+
+        
+def subdomainbrute_result(request):
+    """Renders the about page."""
+    assert isinstance(request, HttpRequest)
+    domain_name = request.GET.get('domain_name', '')
+    if domain_name:
+        subdomain_objs = SubDomainBrute.objects.filter(domain_name = domain_name)
+    else:
+        subdomain_objs = ''
+        
+    scaned_domain = SubDomainBruteTask.objects.distinct().values("domain_name") 
+    return render(
+            request,
+            'app/subdomainbrute.html',
+            context_instance = RequestContext(request,
+            {
+                'title':'subdomainbrute',
+                'message':'Your application description page.',
+                'year':datetime.now().year,
+                'scaned_domain' : scaned_domain,
+                'subdomain_objs' : subdomain_objs,
+            })
+        )
+        
+import json
+
+def portscan(request):
+    """Renders the about page."""
+    assert isinstance(request, HttpRequest)
+    if request.method == 'GET':
+        form = PortScanForms()
+    else:
+        form = PortScanForms(request.POST)
+    if not form.is_valid():
+        #print 1000*'A'
+        return render(
+            request,
+            'app/portscan.html',
+            context_instance = RequestContext(request,
+            {
+                'title':'portscan',
+                'message':'Your application description page.',
+                'year':datetime.now().year,
+                'form': form ,
+
+            })
+        )
+    ip_range = form.cleaned_data.get('ip_range', [])    
+    port_range = form.cleaned_data.get('port_range', [])    
+    print ">>>>",ip_range,port_range
+    param = dict(form.data)
+    param['ip_range'] = ip_range
+    param['port_range'] = port_range
+    param_str = json.dumps(param)
+    task =  Task( site = ip_range,attack_type='portscan' ,status = 'WAITTING',parameter =param_str,attack_target=ip_range)
+    task.save()
+    transaction.commit()
+    return render(
+            request,
+            'app/portscan.html',
+            context_instance = RequestContext(request,
+            {
+                'title':'portscan',
+                'message':'Your application description page.',
+                'year':datetime.now().year,
+                'form': form ,
+
+            })
+        )
+
+def sitedesc(request):
+    """Renders the about page."""
+    assert isinstance(request, HttpRequest)
+    if request.method == 'GET':
+        form = SiteDescForms()
+    else:
+        form = SiteDescForms(request.POST)
+    if not form.is_valid():
+        #print 1000*'A'
+        return render(
+            request,
+            'app/sitedesc.html',
+            context_instance = RequestContext(request,
+            {
+                'title':'sitedesc',
+                'message':'Your application description page.',
+                'year':datetime.now().year,
+                'form': form ,
+
+            })
+        )
+    ip_range = form.cleaned_data.get('ip_range', [])    
+    port_range = form.cleaned_data.get('port_range', [])    
+    print ">>>>",ip_range,port_range
+    ip_range = ip_range.split(',')
+    port_range = port_range.split(',')
+    for i in ip_range:
+        for j in port_range:
+            site_desc_task = SiteDesc( site = i,port = j)
+            site_desc_task.save()
+    #site_desc_task = SiteDesc( domain_name = domain_name,)
+    site_desc_task.save()
+    transaction.commit()
+   # domain_brute_task = SubDomainBruteTask( domain_name = domain_name,)
+   # domain_brute_task.save()
+    #transaction.commit()
+    return render(
+            request,
+            'app/sitedesc.html',
+            context_instance = RequestContext(request,
+            {
+                'title':'sitedesc',
+                'message':'Your application description page.',
+                'year':datetime.now().year,
+                'form': form ,
+
+            })
+        )

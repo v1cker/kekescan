@@ -1,0 +1,95 @@
+{% load xfilter %}
+<!DOCTYPE html>
+<html class=" ">
+  
+{% include 'header.html' %}
+  
+  <body class="">
+
+    {% include 'left.html' %}
+
+    <main>
+      {% include 'banner.html' %}
+      <div class="container-fluid">
+        <h1 class="bread-crumb">
+          <strong>
+            <a href="/task/add">TASKADD</a> / <a href="/task/queue">主任务队列</a> / <a href="/subtask/queue">子任务队列</a>
+          </strong>
+        </h1>
+ 
+
+{% if task_objs %}
+<table class="table">
+	<thead>
+		<tr class="h30">
+	 
+			<th width="50">MID</th>
+            <th width="150">attack type</th>
+			<th width="150">target</th>
+			<th width="80">status</th>
+			<th width="180">start time</th>
+			<th>celery_id</th>			
+            <th width="230">schedules</th>
+			<th width="140">operate</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for obj in task_objs %}
+	<tr>
+		 
+		<td>{{obj.main_task_id}}</td>
+        <td>{{ obj.attack_type}}</td>
+		<td>{{ obj.attack_target}}</td>
+        <td>{{ obj.status}}</td>
+		<td>{{ obj.start_time|date:"m-d H:i:s" }}</td>
+		<td>{{ obj.celery_task_id }}</td>
+        <td>{{ obj.except_message }}</td>
+		<td>
+			{% ifequal obj.status "PAUSED" %}
+			<a href="/task/resume?id={{ obj.id }}" class="thickbox"><span class="glyphicon glyphicon-repeat" aria-hidden="true" title="恢复" alt="恢复" /></span>  </a>&nbsp;&nbsp;
+            <a href="/task/stop?id={{ obj.id }}" class="thickbox"> <span class="glyphicon glyphicon-stop" aria-hidden="true" title="停止" alt="停止" /></span></a>&nbsp;&nbsp;
+            <a href="/task/delete?selected={{ obj.id }}" class="thickbox"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true" title="删除" alt="删除" /></span>  </a>
+			{% endifequal %}
+			{% ifequal obj.status "WAITTING" %}
+			<a href="/task/delete?selected={{ obj.id }}" class="thickbox"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true" title="删除" alt="删除" />&nbsp;&nbsp;
+	        <a href="/task/stop?id={{ obj.id }}" class="thickbox"><span class="glyphicon glyphicon-stop" aria-hidden="true" title="停止" alt="停止" /></span></a>
+            {% endifequal %}
+			{% ifequal obj.status "RUNNING" %}
+			 <a href="/task/stop?id={{ obj.id }}" class="thickbox"><span class="glyphicon glyphicon-stop" aria-hidden="true" title="停止" alt="停止" /></span></a>
+			{% endifequal %}
+		</td>
+	</tr>
+	{% endfor %}
+    
+   <tfoot>
+ 
+            
+            <tr>
+                <td colspan="6">
+                    <ul id="pagination-ddol" class="pagination-sm pull-right"></ul>
+                    
+                    <p class="tfoot-info">共 <span class="text-success">{{ num }}</span> 条记录
+                        <span class="step-links">
+                        {% if task_objs.has_previous %}
+                        <a href="?task_id={{ task_id }}&?page={{ task_objs.previous_page_number }}">previous</a>
+                        {% endif %}
+
+                        <!-- Showing the page numbers in Html Page -->
+                        <span class="current">
+                        Page {{ task_objs.number }} of {{ task_objs.paginator.num_pages }}.
+                        </span>
+
+                        {% if task_objs.has_next %}
+                        <a href="?task_id={{ task_id }}&page={{ task_objs.next_page_number }}">next</a>
+                        {% endif %}</p> 
+                        </span>
+                </td>
+            </tr>
+            </tfoot>
+	</tbody>
+</table>
+
+{% endif %}
+    </main>
+
+  </body></html>
